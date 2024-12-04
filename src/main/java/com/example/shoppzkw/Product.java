@@ -3,6 +3,8 @@ package com.example.shoppzkw;
 import java.util.Objects;
 
 public class Product {
+    private static int idCounter = 1;
+
     private int id;
     private String name;
     private String category;
@@ -10,11 +12,12 @@ public class Product {
     private double weight;
 
     public Product() {
-        this.id = 1;
+        this.id = idCounter;
+        idCounter++;
     }
 
-    public Product(int id, String name, String category, double price, double weight) {
-        this.id = id;
+    public Product(String name, String category, double price, double weight) {
+        this();
         this.name = name;
         this.price = price;
         this.weight = weight;
