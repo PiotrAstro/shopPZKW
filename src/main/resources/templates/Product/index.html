@@ -31,9 +31,9 @@
             <td th:text="${product.getWeight()}">100</td>
             <td>
                 <div class="btn-group" role="group">
-                    <a th:href="@{{id}(id=${product.getId()})}" class="btn btn-primary">Details</a>
-                    <a th:href="@{{id}/edit(id=${product.getId()})}" class="btn btn-warning">Edit</a>
-                    <a th:href="@{remove(id=${product.getId()})}" class="btn btn-danger">Delete</a>
+                    <a th:href="@{/Product/{id}(id=${product.getId()})}" class="btn btn-primary">Details</a>
+                    <a th:href="@{/Product/{id}/edit(id=${product.getId()})}" class="btn btn-warning">Edit</a>
+                    <a th:href="@{/Product/remove(id=${product.getId()})}" class="btn btn-danger">Delete</a>
                 </div>
             </td>
         </tr>

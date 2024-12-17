@@ -1,57 +1,131 @@
 package com.example.shoppzkw;
 
+import com.example.shoppzkw.model.Category;
+import com.example.shoppzkw.model.ProductsRepository;
+import com.example.shoppzkw.model.CategoriesRepository;
+import com.example.shoppzkw.model.Product;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
-    List<Product> products;
+    @Autowired
+    private ProductsRepository products;
+    @Autowired
+    private CategoriesRepository categories;
 
-    public ProductService() {
-        products = new ArrayList<>();
-    }
+
+//    public ProductService() {
+//        products = new ArrayList<>();
+//    }
 
     public void seed() {
-        products.clear();
-        products.add(new Product("Pomidor", "Owoc", 4.2, 4.1));
-        products.add(new Product("Ogórek", "Warzywa", 5.2, 5.1));
-        products.add(new Product("Marchew", "Warzywa", 3.2, 3.1));
-        products.add(new Product("Ziemniak", "Warzywa", 2.2, 2.1));
-        products.add(new Product("Cebula", "Warzywa", 1.2, 1.1));
+        categories.deleteAll();
+
+        Category owoce = Category.builder().name("Owoce").code("K1").build();
+        categories.save(owoce);
+        Category warzywa = Category.builder().name("Warzywa").code("K2").build();
+        categories.save(warzywa);
+
+        products.save(
+            Product.builder()
+                .name("Pomidor")
+                .category(owoce)
+                .price(4.2)
+                .weight(4.1)
+                .build()
+        );
+        products.save(
+            Product.builder()
+                .name("Ogórek")
+                .category(warzywa)
+                .price(5.2)
+                .weight(5.1)
+                .build()
+        );
+        products.save(
+            Product.builder()
+                .name("Marchew")
+                .category(warzywa)
+                .price(3.2)
+                .weight(3.1)
+                .build()
+        );
+        products.save(
+            Product.builder()
+                .name("Ziemniak")
+                .category(warzywa)
+                .price(2.2)
+                .weight(2.1)
+                .build()
+        );
+        products.save(
+            Product.builder()
+                .name("Cebula")
+                .category(warzywa)
+                .price(1.2)
+                .weight(1.1)
+                .build()
+        );
     }
 
     public List<Product> getAllProducts() {
-        return products;
+        return products.findAll(Sort.by(Sort.Direction.ASC, "ProductId"));
     }
 
-    public void updateProduct(Product product) {
-        products.set(getProductIndex(product.getId()), product);
-    }
+//    public void updateProduct(Product product) {
+//        products.set(getProductIndex(product.getId()), product);
+//    }
 
     public void addProduct(Product product) {
-        products.add(product);
+        products.save(product);
     }
 
-    public Product getProduct(int id) {
-        return products.get(getProductIndex(id));
+    public Optional<Product> getProduct(long id) {
+        return products.findById(id);
     }
 
-    public void removeProduct(int id) {
-        products.remove(getProductIndex(id));
-    }
-
-    public boolean hasProduct(int id) {
-        return getProductIndex(id) != -1;
-    }
-
-    private int getProductIndex(int id) {
-        for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).getId() == id) {
-                return i;
-            }
+    public boolean removeProduct(long id) {
+        if (!hasProduct(id)) {
+            return false;
         }
-        return -1;
+        products.deleteById(id);
+        return true;
     }
+
+    public boolean hasProduct(long id) {
+        return products.existsById(id);
+    }
+
+    // ----------------- Category -----------------
+
+    public List<Category> getAllCategories() {
+        return categories.findAll(Sort.by(Sort.Direction.ASC, "CategoryId"));
+    }
+
+    public void addCategory(Category category) {
+        categories.save(category);
+    }
+
+    public Optional<Category> getCategory(long id) {
+        return categories.findById(id);
+    }
+
+    public boolean removeCategory(long id) {
+        if (!hasCategory(id)) {
+            return false;
+        }
+        categories.deleteById(id);
+        return true;
+    }
+
+    public boolean hasCategory(long id) {
+        return categories.existsById(id);
+    }
+
+
 }
