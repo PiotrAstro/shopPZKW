@@ -4,9 +4,11 @@ import com.example.shoppzkw.model.Category;
 import com.example.shoppzkw.model.ProductsRepository;
 import com.example.shoppzkw.model.CategoriesRepository;
 import com.example.shoppzkw.model.Product;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
 
 import java.util.List;
 import java.util.Optional;
@@ -81,7 +83,32 @@ public class ProductService {
 //        products.set(getProductIndex(product.getId()), product);
 //    }
 
-    public void addProduct(Product product) {
+    @Transactional
+    public void addProduct(Product product, Errors errors) {
+        if (errors.hasErrors()) {
+            return;
+        }
+
+        if (!products.findByName(product.getName()).isEmpty()) {
+            errors.rejectValue("name", "product.name", "Product with this name already exists");
+            return;
+        }
+
+        products.save(product);
+    }
+
+    @Transactional
+    public void editProduct(Product product, Errors errors) {
+        if (errors.hasErrors()) {
+            return;
+        }
+
+        List<Product> existingProducts = products.findByName(product.getName());
+        if (!existingProducts.isEmpty() && existingProducts.get(0).getProductId() != product.getProductId()) {
+            errors.rejectValue("name", "product.name", "Product with this name already exists");
+            return;
+        }
+
         products.save(product);
     }
 
@@ -101,13 +128,35 @@ public class ProductService {
         return products.existsById(id);
     }
 
+
+
     // ----------------- Category -----------------
+
+
 
     public List<Category> getAllCategories() {
         return categories.findAll(Sort.by(Sort.Direction.ASC, "CategoryId"));
     }
 
     public void addCategory(Category category) {
+        categories.save(category);
+    }
+
+    @Transactional
+    public void addCategory(Category category, Errors errors) {
+        if (errors.hasErrors()) {
+            return;
+        }
+
+        if (!categories.findByName(category.getName()).isEmpty()) {
+            errors.rejectValue("name", "product.name", "Product with this name already exists");
+            return;
+        }
+        if (!categories.findByCode(category.getCode()).isEmpty()) {
+            errors.rejectValue("code", "product.code", "Product with this code already exists");
+            return;
+        }
+
         categories.save(category);
     }
 
@@ -126,6 +175,4 @@ public class ProductService {
     public boolean hasCategory(long id) {
         return categories.existsById(id);
     }
-
-
 }

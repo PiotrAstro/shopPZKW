@@ -21,7 +21,7 @@ public class CategoryController {
     @GetMapping("/")
     public String categories(Model model) {
         model.addAttribute("categories", productService.getAllCategories());
-        return "Category/index";
+        return "/Category/index";
     }
 
     @GetMapping("/add")
@@ -31,11 +31,11 @@ public class CategoryController {
     }
 
     @PostMapping("/add")
-    public String addCategory(@Valid Category category, Errors errors, Model model) {
+    public String addCategory(@Valid @ModelAttribute Category category, Errors errors, Model model) {
+        productService.addCategory(category, errors);
         if (errors.hasErrors()) {
             return "/Category/add";
         }
-        productService.addCategory(category);
         return "redirect:/Category/" + category.getCategoryId();
     }
 

@@ -21,6 +21,6 @@ public class MainController {
     @GetMapping("/seed")
     public String seed() {
         productService.seed();
-        return "redirect:/Product";
+        return "redirect:/";
     }
 }

@@ -34,13 +34,13 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public String add(@Valid Product product, Errors errors, Model model) {
+    public String add(@Valid @ModelAttribute Product product, Errors errors, Model model) {
+        productService.addProduct(product, errors);
         if (errors.hasErrors()) {
             model.addAttribute("product", product);
             model.addAttribute("categories", productService.getAllCategories());
             return "/Product/add";
         }
-        productService.addProduct(product);
         return "redirect:/Product/" + product.getProductId();
     }
 
@@ -50,7 +50,7 @@ public class ProductController {
         if (!success) {
             return "redirect:/Product/removeError";
         }
-        return "redirect:/Product";
+        return "redirect:/Product/";
     }
 
     @GetMapping("/removeError")
@@ -75,24 +75,35 @@ public class ProductController {
         return "message";
     }
 
-    //    @GetMapping("/{productId}/edit")
-//    public String edit(Model model, @PathVariable("productId") int id) {
-//        model.addAttribute("product", productService.getProduct(id));
-//        return "edit";
-//    }
+    @GetMapping("/{productId}/edit")
+    public String edit(Model model, @PathVariable("productId") int id) {
+        Optional<Product> product = productService.getProduct(id);
+        if (product.isEmpty()) {
+            return "redirect:/Product/editError";
+        }
+        model.addAttribute("product", product.get());
+        model.addAttribute("categories", productService.getAllCategories());
+        return "/Product/edit";
+    }
 
-//    @PostMapping("/edit")
-//    public String edit(@ModelAttribute Product product) {
-//        if (!productService.hasProduct(product.getId())) {
-//            return "redirect:/editError";
-//        }
-//        productService.updateProduct(product);
-//        return "redirect:/";
-//    }
+    @PostMapping("/edit")
+    public String edit(@Valid @ModelAttribute Product product, Errors errors, Model model) {
+        if (!productService.hasProduct(product.getProductId())) {
+            return "redirect:/Product/editError";
+        }
 
-//    @GetMapping("/editError")
-//    public String editError(Model model) {
-//        model.addAttribute("message", "Product with this id does not exist");
-//        return "message";
-//    }
+        productService.editProduct(product, errors);
+        if (errors.hasErrors()) {
+            model.addAttribute("product", product);
+            model.addAttribute("categories", productService.getAllCategories());
+            return "/Product/edit";
+        }
+        return "redirect:/Product/" + product.getProductId();
+    }
+
+    @GetMapping("/editError")
+    public String editError(Model model) {
+        model.addAttribute("message", "Product with this id does not exist");
+        return "message";
+    }
 }
