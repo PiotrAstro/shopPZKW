@@ -5,12 +5,13 @@
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate="layout">
 <head>
-    <title layout:fragment="title">Very Nice Shop</title>
+    <title layout:fragment="title">Categories</title>
 </head>
 
 <div layout:fragment="content">
-    <div class="mb-4">
-        <h1 class="display-5">Shop Products</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-5">Shop Categories</h1>
+        <a href="/Category/add" class="btn btn-primary">Add Category</a>
     </div>
 
     <table class="table table-striped table-hover align-middle">
@@ -18,22 +19,20 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">Name</th>
-            <th scope="col">Price</th>
-            <th scope="col">Weight</th>
+            <th scope="col">Code</th>
             <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="product : ${products}">
-            <td th:text="${product.getProductId()}">1</td>
-            <td th:text="${product.getName()}">Sample Name</td>
-            <td th:text="${product.getPrice()}">$10.00</td>
-            <td th:text="${product.getWeight()}">100</td>
+        <tr th:each="category : ${categories}">
+            <td th:text="${category.getCategoryId()}">1</td>
+            <td th:text="${category.getName()}">Sample Name</td>
+            <td th:text="${category.getCode()}">$10.00</td>
             <td>
                 <div class="btn-group" role="group">
-                    <a th:href="@{/Product/{id}(id=${product.getProductId()})}" class="btn btn-primary">Details</a>
-                    <a th:href="@{/Product/{id}/edit(id=${product.getProductId()})}" class="btn btn-warning">Edit</a>
-                    <a th:href="@{/Product/remove(id=${product.getProductId()})}" class="btn btn-danger">Delete</a>
+                    <a th:href="@{/Category/{id}(id=${category.getCategoryId()})}" class="btn btn-primary">Details</a>
+                    <a th:href="@{/Category/{id}/edit(id=${category.getCategoryId()})}" class="btn btn-warning">Edit</a>
+                    <a th:href="@{/Category/remove(id=${category.getCategoryId()})}" class="btn btn-danger">Delete</a>
                 </div>
             </td>
         </tr>

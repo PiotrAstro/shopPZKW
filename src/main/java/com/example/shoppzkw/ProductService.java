@@ -20,11 +20,6 @@ public class ProductService {
     @Autowired
     private CategoriesRepository categories;
 
-
-//    public ProductService() {
-//        products = new ArrayList<>();
-//    }
-
     public void seed() {
         categories.deleteAll();
 
@@ -78,10 +73,6 @@ public class ProductService {
     public List<Product> getAllProducts() {
         return products.findAll(Sort.by(Sort.Direction.ASC, "ProductId"));
     }
-
-//    public void updateProduct(Product product) {
-//        products.set(getProductIndex(product.getId()), product);
-//    }
 
     @Transactional
     public void addProduct(Product product, Errors errors) {
@@ -138,10 +129,6 @@ public class ProductService {
         return categories.findAll(Sort.by(Sort.Direction.ASC, "CategoryId"));
     }
 
-    public void addCategory(Category category) {
-        categories.save(category);
-    }
-
     @Transactional
     public void addCategory(Category category, Errors errors) {
         if (errors.hasErrors()) {
@@ -153,6 +140,26 @@ public class ProductService {
             return;
         }
         if (!categories.findByCode(category.getCode()).isEmpty()) {
+            errors.rejectValue("code", "product.code", "Product with this code already exists");
+            return;
+        }
+
+        categories.save(category);
+    }
+
+    @Transactional
+    public void editCategory(Category category, Errors errors) {
+        if (errors.hasErrors()) {
+            return;
+        }
+
+        List<Category> existingCategories = categories.findByName(category.getName());
+        if (!existingCategories.isEmpty() && existingCategories.get(0).getCategoryId() != category.getCategoryId()) {
+            errors.rejectValue("name", "product.name", "Product with this name already exists");
+            return;
+        }
+        existingCategories = categories.findByCode(category.getCode());
+        if (!existingCategories.isEmpty() && existingCategories.get(0).getCategoryId() != category.getCategoryId()) {
             errors.rejectValue("code", "product.code", "Product with this code already exists");
             return;
         }

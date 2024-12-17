@@ -55,7 +55,7 @@
             <option value="" disabled selected>Select category</option>
             <option th:each="categoryElem : ${categories}"
                     th:value="${categoryElem.categoryId}"
-                    th:text="${categoryElem.name}">
+                    th:text="${categoryElem.showName()}">
             </option>
           </select>
           <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="text-danger"></div>
