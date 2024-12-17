@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 @Controller
-@RequestMapping("/Products")
+@RequestMapping("/Category")
 public class CategoryController {
     private final ProductService productService;
 

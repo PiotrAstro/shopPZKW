@@ -15,7 +15,7 @@ public class MainController {
 
     @GetMapping("/")
     public String index(Model model) {
-        return "redirect:/Product";
+        return "redirect:/Product/";
     }
 
     @GetMapping("/seed")

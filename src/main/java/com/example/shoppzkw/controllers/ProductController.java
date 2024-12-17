@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/Products")
+@RequestMapping("/Product")
 public class ProductController {
     private final ProductService productService;
 
@@ -23,7 +23,7 @@ public class ProductController {
     @GetMapping("/")
     public String products(Model model) {
         model.addAttribute("products", productService.getAllProducts());
-        return "Product/index";
+        return "/Product/index";
     }
 
     @GetMapping("/add")
