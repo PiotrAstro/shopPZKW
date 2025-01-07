@@ -74,6 +74,10 @@ public class ProductService {
         return products.findAll(Sort.by(Sort.Direction.ASC, "ProductId"));
     }
 
+    public List<Product> getProductsByIds(List<Long> ids) {
+        return products.findAllById(ids);
+    }
+
     @Transactional
     public void addProduct(Product product, Errors errors) {
         if (errors.hasErrors()) {

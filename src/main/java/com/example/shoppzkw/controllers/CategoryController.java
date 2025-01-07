@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 @Controller
-@RequestMapping("/Category")
+@RequestMapping("/adm/Category")
 public class CategoryController {
     private final ProductService productService;
 
@@ -22,13 +22,13 @@ public class CategoryController {
     @GetMapping("/")
     public String categories(Model model) {
         model.addAttribute("categories", productService.getAllCategories());
-        return "/Category/index";
+        return "/adm/Category/index";
     }
 
     @GetMapping("/add")
     public String add(Model model) {
         model.addAttribute("category", new Category());
-        return "/Category/add";
+        return "/adm/Category/add";
     }
 
     @PostMapping("/add")
@@ -36,18 +36,18 @@ public class CategoryController {
         productService.addCategory(category, errors);
         if (errors.hasErrors()) {
             model.addAttribute("category", category);
-            return "/Category/add";
+            return "/adm/Category/add";
         }
-        return "redirect:/Category/" + category.getCategoryId();
+        return "redirect:/adm/Category/" + category.getCategoryId();
     }
 
     @GetMapping("/remove")
     public String remove(@RequestParam("id") int id) {
         boolean success = productService.removeCategory(id);
         if (!success) {
-            return "redirect:/Category/removeError";
+            return "redirect:/adm/Category/removeError";
         }
-        return "redirect:/Category/";
+        return "redirect:/adm/Category/";
     }
 
     @GetMapping("/removeError")
@@ -60,10 +60,10 @@ public class CategoryController {
     public String details(Model model, @PathVariable("categoryId") int id) {
         Optional<Category> category = productService.getCategory(id);
         if (category.isEmpty()) {
-            return "redirect:/Category/detailsError";
+            return "redirect:/adm/Category/detailsError";
         }
         model.addAttribute("category", category.get());
-        return "/Category/details";
+        return "/adm/Category/details";
     }
 
     @GetMapping("/detailsError")
@@ -76,24 +76,24 @@ public class CategoryController {
     public String edit(Model model, @PathVariable("categoryId") int id) {
         Optional<Category> category = productService.getCategory(id);
         if (category.isEmpty()) {
-            return "redirect:/Category/editError";
+            return "redirect:/adm/Category/editError";
         }
         model.addAttribute("category", category.get());
-        return "/Category/edit";
+        return "/adm/Category/edit";
     }
 
     @PostMapping("/edit")
     public String edit(@Valid @ModelAttribute Category category, Errors errors, Model model) {
         if (!productService.hasCategory(category.getCategoryId())) {
-            return "redirect:/Category/editError";
+            return "redirect:/adm/Category/editError";
         }
 
         productService.editCategory(category, errors);
         if (errors.hasErrors()) {
             model.addAttribute("category", category);
-            return "/Category/edit";
+            return "/adm/Category/edit";
         }
-        return "redirect:/Category/" + category.getCategoryId();
+        return "redirect:/adm/Category/" + category.getCategoryId();
     }
 
     @GetMapping("/editError")

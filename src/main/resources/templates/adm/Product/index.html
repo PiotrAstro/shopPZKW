@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout}">
+<head>
+    <title layout:fragment="title">Very Nice Shop</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-5">Shop Products</h1>
+        <a href="/adm/Product/add" class="btn btn-primary">Add Product</a>
+    </div>
+
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Weight</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.getProductId()}">1</td>
+            <td th:text="${product.getName()}">Sample Name</td>
+            <td th:text="${product.getPrice()}">$10.00</td>
+            <td th:text="${product.getWeight()}">100</td>
+            <td>
+                <div class="btn-group" role="group">
+                    <a th:href="@{/adm/Product/{id}(id=${product.getProductId()})}" class="btn btn-primary">Details</a>
+                    <a th:href="@{/adm/Product/{id}/edit(id=${product.getProductId()})}" class="btn btn-warning">Edit</a>
+                    <a th:href="@{/adm/Product/remove(id=${product.getProductId()})}" class="btn btn-danger">Delete</a>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

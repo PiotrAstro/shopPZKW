@@ -3,15 +3,14 @@
 <html lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
-      layout:decorate="layout">
+      layout:decorate="~{layout}">
 <head>
-    <title layout:fragment="title">Very Nice Shop</title>
+    <title layout:fragment="title">Add to Cart</title>
 </head>
 
 <div layout:fragment="content">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="display-5">Shop Products</h1>
-        <a href="/Product/add" class="btn btn-primary">Add Product</a>
+        <h1 class="display-5">Add to Cart</h1>
     </div>
 
     <table class="table table-striped table-hover align-middle">
@@ -31,11 +30,10 @@
             <td th:text="${product.getPrice()}">$10.00</td>
             <td th:text="${product.getWeight()}">100</td>
             <td>
-                <div class="btn-group" role="group">
-                    <a th:href="@{/Product/{id}(id=${product.getProductId()})}" class="btn btn-primary">Details</a>
-                    <a th:href="@{/Product/{id}/edit(id=${product.getProductId()})}" class="btn btn-warning">Edit</a>
-                    <a th:href="@{/Product/remove(id=${product.getProductId()})}" class="btn btn-danger">Delete</a>
-                </div>
+                <form th:action="@{/cart/add}" method="post">
+                    <input type="hidden" name="id" th:value="${product.getProductId()}"/>
+                    <button class="btn btn-primary">Add</button>
+                </form>
             </td>
         </tr>
         </tbody>

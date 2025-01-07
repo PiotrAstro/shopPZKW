@@ -1,7 +1,6 @@
 package com.example.shoppzkw.controllers;
 
 import com.example.shoppzkw.ProductService;
-import com.example.shoppzkw.model.Category;
 import com.example.shoppzkw.model.Product;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/Product")
+@RequestMapping("/adm/Product")
 public class ProductController {
     private final ProductService productService;
 
@@ -23,14 +22,14 @@ public class ProductController {
     @GetMapping("/")
     public String products(Model model) {
         model.addAttribute("products", productService.getAllProducts());
-        return "/Product/index";
+        return "/adm/Product/index";
     }
 
     @GetMapping("/add")
     public String add(Model model) {
         model.addAttribute("product", new Product());
         model.addAttribute("categories", productService.getAllCategories());
-        return "/Product/add";
+        return "/adm/Product/add";
     }
 
     @PostMapping("/add")
@@ -39,18 +38,18 @@ public class ProductController {
         if (errors.hasErrors()) {
             model.addAttribute("product", product);
             model.addAttribute("categories", productService.getAllCategories());
-            return "/Product/add";
+            return "/adm/Product/add";
         }
-        return "redirect:/Product/" + product.getProductId();
+        return "redirect:/adm/Product/" + product.getProductId();
     }
 
     @GetMapping("/remove")
     public String remove(@RequestParam("id") int id) {
         boolean success = productService.removeProduct(id);
         if (!success) {
-            return "redirect:/Product/removeError";
+            return "redirect:/adm/Product/removeError";
         }
-        return "redirect:/Product/";
+        return "redirect:/adm/Product/";
     }
 
     @GetMapping("/removeError")
@@ -63,10 +62,10 @@ public class ProductController {
     public String details(Model model, @PathVariable("productId") int id) {
         Optional<Product> product = productService.getProduct(id);
         if (product.isEmpty()) {
-            return "redirect:/Product/detailsError";
+            return "redirect:/adm/Product/detailsError";
         }
         model.addAttribute("product", product.get());
-        return "/Product/details";
+        return "/adm/Product/details";
     }
 
     @GetMapping("/detailsError")
@@ -79,26 +78,26 @@ public class ProductController {
     public String edit(Model model, @PathVariable("productId") int id) {
         Optional<Product> product = productService.getProduct(id);
         if (product.isEmpty()) {
-            return "redirect:/Product/editError";
+            return "redirect:/adm/Product/editError";
         }
         model.addAttribute("product", product.get());
         model.addAttribute("categories", productService.getAllCategories());
-        return "/Product/edit";
+        return "/adm/Product/edit";
     }
 
     @PostMapping("/edit")
     public String edit(@Valid @ModelAttribute Product product, Errors errors, Model model) {
         if (!productService.hasProduct(product.getProductId())) {
-            return "redirect:/Product/editError";
+            return "redirect:/adm/Product/editError";
         }
 
         productService.editProduct(product, errors);
         if (errors.hasErrors()) {
             model.addAttribute("product", product);
             model.addAttribute("categories", productService.getAllCategories());
-            return "/Product/edit";
+            return "/adm/Product/edit";
         }
-        return "redirect:/Product/" + product.getProductId();
+        return "redirect:/adm/Product/" + product.getProductId();
     }
 
     @GetMapping("/editError")

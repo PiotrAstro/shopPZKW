@@ -15,12 +15,18 @@ public class MainController {
 
     @GetMapping("/")
     public String index(Model model) {
-        return "redirect:/Product/";
+        return "redirect:/cart/";
     }
 
-    @GetMapping("/seed")
+    @GetMapping("/adm/seed")
     public String seed() {
         productService.seed();
-        return "redirect:/";
+        return "redirect:/adm/";
+    }
+
+    @GetMapping("/adm/")
+    public String admin() {
+        productService.seed();
+        return "redirect:/adm/Product/";
     }
 }
